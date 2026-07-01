@@ -102,7 +102,7 @@ streamlit run app.py
 |---|---|
 | Char accuracy (val set) | 0.96+ |
 | Char accuracy (train set) | ~1.00 |
-| Val CTC loss (best checkpoint) | ~0.21 |
+| Val CTC loss (best checkpoint) | ~0.26 |
 
 ---
 
