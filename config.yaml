@@ -1,0 +1,5 @@
+path: "C:\\Users\\User\\OneDrive\\Masa\xFCst\xFC\\YOLO-finetune\\License Detection"
+train: images\train
+val: images\val
+names:
+  0: license_plate
