@@ -41,9 +41,7 @@ CTC decode → plate string
 ```
 ├── model.py                  # CNN, Transformer, OCRModel definitions
 ├── app.py                    # Streamlit demo app
-├── train.py                  # Training loop with AMP, epoch batching
-├── dataset.py                # OCRDataset, collate_fn, cache builder
-├── generate_plates.py        # Synthetic plate image generator (Pillow)
+├── ocr_train.py                  # Training loop with AMP, epoch batching
 ├── retrain_oxf/              # Saved model checkpoints
 └── README.md
 ```
