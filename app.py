@@ -1,4 +1,6 @@
 
+import uuid
+import sqlite3
 import streamlit as st
 from model import *
 import tempfile
@@ -97,6 +99,7 @@ st.markdown('<p class="subtitle">YOLO detection · CNN→Transformer→CTC recog
 # ── model loading ─────────────────────────────────────────────────────────────
 YOLO_PATH = "C:\\Users\\User\\Python\\ML\\Deep Learning\\runs\\detect\\experiments\\license_platev1\\run_1\\weights\\best.pt"
 OCR_PATH  = "retrain_oxf/realtrplate_2k_00030.pth"
+img_save_path = "C:\\Users\\User\\OneDrive\\Masaüstü\\DETECTED PLATES"
 
 @st.cache_resource
 def load_models():
@@ -142,6 +145,9 @@ uploaded_file = st.file_uploader(
 if uploaded_file:
     # show original
     pil_img = ImageOps.exif_transpose(Image.open(uploaded_file).convert("RGB"))
+    unique_id = str(uuid.uuid4().hex)
+    curr_image_save_path = os.path.join(img_save_path,f"{unique_id}.jpg")
+    pil_img.save(curr_image_save_path)
     st.image(pil_img, caption="Uploaded image", use_container_width=True)
 
     with st.spinner("Detecting plate…"):
@@ -167,6 +173,7 @@ if uploaded_file:
     # pick highest confidence box
     boxes = results[0].boxes
     best  = boxes.conf.argmax().item()
+    best_conf_score = boxes[best].conf.item()
     x1, y1, x2, y2 = boxes.xyxy[best].int().tolist()
 
     # crop plate
@@ -175,13 +182,13 @@ if uploaded_file:
     crop_pil = Image.fromarray(crop).convert("RGB")
 
     # show annotated frame and crop side by side
-    col1, col2 = st.columns(2)
+    col1, col2 , ...?= st.columns(2) # this is not a  fixed number now.
     with col1:
         annotated = results[0].plot()
         st.image(annotated, caption="Detection", use_container_width=True)
     with col2:
         st.image(crop_pil, caption="Plate crop", use_container_width=True)
-
+    
     # save crop to temp file
     with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
         tmp_path = tmp.name
@@ -211,5 +218,17 @@ if uploaded_file:
             <div class="plate-text">{prediction}</div>
         </div>
         """, unsafe_allow_html=True)
+
+        try:
+            with sqlite3.connect("plates.db") as conn:
+                conn.execute("""
+                    INSERT INTO plates(plate_number, confidence_score, image_path, source)
+                    VALUES (?, ?, ?, ?)
+                """, (prediction, best_conf_score, curr_image_save_path, 'upload'))
+                conn.commit()
+            st.markdown('<div class="info-box">✓ Saved to database</div>', unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown(f'<div class="error-box">⚠ DB error: {e}</div>', unsafe_allow_html=True)
+            conn.close()
     else:
         st.markdown('<div class="error-box">⚠ OCR returned empty result — plate may be unreadable.</div>', unsafe_allow_html=True)
