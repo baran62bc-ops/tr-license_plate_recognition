@@ -2,6 +2,7 @@
 
 An end-to-end pipeline for detecting and reading Turkish license plates from car images. Built from scratch using a fine-tuned YOLOv11 detector and a custom CNN → Transformer → CTC text recognition model, deployed as a Streamlit app.
 
+The model has two issues. First, it struggles with 2-line license plates like NN CCC\n NNN, the model has seen almost entirely NN CCC NNN, so it performs poorly on them. Second, the fine-tuned YOLO model may still detect license plates on cars where the license plate is removed. I have to train another model for the classification task( plate, noplate). However, for that I have to build another dataset with images of cars with no license plates, that would take a lot of time. For now, I will skip building that dataset and focus more on learning other stuff. 
 ---
 
 ## Architecture
