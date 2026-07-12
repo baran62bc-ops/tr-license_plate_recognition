@@ -97,9 +97,9 @@ st.markdown("<h1>🚗 Plate Reader</h1>", unsafe_allow_html=True)
 st.markdown('<p class="subtitle">YOLO detection · CNN→Transformer→CTC recognition</p>', unsafe_allow_html=True)
 
 # ── model loading ─────────────────────────────────────────────────────────────
-YOLO_PATH = "C:\\Users\\User\\Python\\ML\\Deep Learning\\runs\\detect\\experiments\\license_platev1\\run_1\\weights\\best.pt"
-OCR_PATH  = "retrain_oxf/realtrplate_2k_00030.pth"
-img_save_path = "C:\\Users\\User\\OneDrive\\Masaüstü\\DETECTED PLATES"
+YOLO_PATH = "models/best.pt"
+OCR_PATH  = "models/best_model.pth"
+img_save_path = "detected_plates"
 
 @st.cache_resource
 def load_models():
