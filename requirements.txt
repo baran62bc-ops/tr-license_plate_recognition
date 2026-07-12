@@ -9,3 +9,4 @@ ultralytics
 wandb
 python-dotenv
 streamlit
+opencv-python
