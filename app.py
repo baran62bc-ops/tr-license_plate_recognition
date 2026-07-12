@@ -182,7 +182,7 @@ if uploaded_file:
     crop_pil = Image.fromarray(crop).convert("RGB")
 
     # show annotated frame and crop side by side
-    col1, col2 , ...?= st.columns(2) # this is not a  fixed number now.
+    col1, col2= st.columns(2) # this is not a  fixed number now.
     with col1:
         annotated = results[0].plot()
         st.image(annotated, caption="Detection", use_container_width=True)
